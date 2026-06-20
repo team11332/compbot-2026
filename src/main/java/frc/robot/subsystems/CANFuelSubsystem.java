@@ -55,25 +55,25 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   // A method to set the rollers to values for intaking
   public void intake() {
-    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)));
+    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)).withSlot(0));
     intakeLauncherRoller
-        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)));
+        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
   }
 
   // A method to set the rollers to values for ejecting fuel out the intake. Uses
   // the same values as intaking, but in the opposite direction.
   public void eject() {
     feederRoller
-        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)));
+        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)).withSlot(0));
     intakeLauncherRoller
-        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VELOCITY)));
+        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
   }
 
   // A method to set the rollers to values for launching.
   public void launch() {
-    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY)));
+    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY)).withSlot(0));
     intakeLauncherRoller
-        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)));
+        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)).withSlot(0));
   }
 
   // A method to stop the rollers
@@ -86,9 +86,9 @@ public class CANFuelSubsystem extends SubsystemBase {
   // push Fuel away from the launcher
   public void spinUp() {
     feederRoller
-        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VELOCITY)));
+        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VELOCITY)).withSlot(0));
     intakeLauncherRoller
-        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Spin-up launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)));
+        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Spin-up launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)).withSlot(0));
   }
 
   // A command factory to turn the spinUp method into a command that requires this

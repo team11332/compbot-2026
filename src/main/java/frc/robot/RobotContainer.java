@@ -86,7 +86,7 @@ public class RobotContainer {
     // are also scaled down so the rotation is more easily controllable.
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
-            () -> -driverController.getLeftY() * DRIVE_SCALING,
+            () -> driverController.getLeftY() * DRIVE_SCALING,
             () -> -driverController.getRightX() * ROTATION_SCALING));
   }
 

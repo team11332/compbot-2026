@@ -22,12 +22,20 @@ import static frc.robot.Constants.FuelConstants.*;
 public class CANFuelSubsystem extends SubsystemBase {
   private final TalonFX feederRoller;
   private final TalonFX intakeLauncherRoller;
+  private final SparkMax Indexer;
 
   /** Creates a new CANBallSubsystem. */
   public CANFuelSubsystem() {
     // create brushed motors for each of the motors on the launcher mechanism
     intakeLauncherRoller = new TalonFX(INTAKE_LAUNCHER_MOTOR_ID);
-    feederRoller = new TalonFX(FEEDER_MOTOR_ID);
+    feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushed);
+    Indexer = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushed);
+
+    // create the configuration for the feeder roller, set a current limit and apply
+    // the config to the controller
+    SparkMaxConfig feederConfig = new SparkMaxConfig();
+    feederConfig.smartCurrentLimit(INDEXER_MOTOR_CURRENT_LIMIT);
+    Indexer.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // put default values for various fuel operations onto the dashboard
     // all methods in this subsystem pull their values from the dashbaord to allow
@@ -38,12 +46,7 @@ public class CANFuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY);
     SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VELOCITY);
     SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VELOCITY);
-    // create the configuration for the feeder roller, set a current limit and apply
-    // the config to the controller
-    TalonFXConfiguration feederConfig = new TalonFXConfiguration();
-    feederConfig.CurrentLimits.SupplyCurrentLimit = FEEDER_MOTOR_CURRENT_LIMIT;
-    feederRoller.getConfigurator().apply(feederConfig);
-
+   
     // create theget configuration for the launcher roller, set a current limit, set
     // the motor to inverted so that positive values are used for both intaking and
     // launching, and apply the config to the controller
@@ -55,7 +58,7 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   // A method to set the rollers to values for intaking
   public void intake() {
-    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)).withSlot(0));
+    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE)).withSlot(0));
     intakeLauncherRoller
         .setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
   }

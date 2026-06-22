@@ -19,8 +19,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.FuelConstants.*;
 
+import java.security.Policy;
+
 public class CANFuelSubsystem extends SubsystemBase {
-  private final TalonFX feederRoller;
+  private final SparkMax feederRoller;
   private final TalonFX intakeLauncherRoller;
   private final SparkMax Indexer;
 
@@ -56,25 +58,25 @@ public class CANFuelSubsystem extends SubsystemBase {
     intakeLauncherRoller.getConfigurator().apply(launcherConfig);
   }
 
-  // A method to set the rollers to values for intaking
-  public void intake() {
-    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE)).withSlot(0));
-    intakeLauncherRoller
-        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
+   
+// A method to set the voltage of the intake roller
+  public void setFeederRoller(double power) {
+    Indexer.set(power); // positive for shooting
   }
-
   // A method to set the rollers to values for ejecting fuel out the intake. Uses
   // the same values as intaking, but in the opposite direction.
   public void eject() {
-    feederRoller
-        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)).withSlot(0));
+    feederRoller.setFeederRoller
+        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)).withSlot(0))
+;
     intakeLauncherRoller
         .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
   }
 
   // A method to set the rollers to values for launching.
   public void launch() {
-    feederRoller.setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY)).withSlot(0));
+    feederRoller
+        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY)).withSlot(0));
     intakeLauncherRoller
         .setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)).withSlot(0));
   }

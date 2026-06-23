@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -70,8 +71,14 @@ public class CANFuelSubsystem extends SubsystemBase {
     TalonFXConfiguration launcherConfig = new TalonFXConfiguration();
     launcherConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     launcherConfig.CurrentLimits.SupplyCurrentLimit = LAUNCHER_MOTOR_CURRENT_LIMIT;
+    Slot0Configs slot0Configs = new Slot0Configs();
+    slot0Configs.kP = 0.1;
+    slot0Configs.kI = 0.0;
+    slot0Configs.kD = 0.0;
     intakeLauncherLeader.getConfigurator().apply(launcherConfig);
     intakeLauncherFollower.getConfigurator().apply(launcherConfig);
+    intakeLauncherLeader.getConfigurator().apply(slot0Configs);
+    intakeLauncherFollower.getConfigurator().apply(slot0Configs);
     intakeLauncherFollower.setControl(new Follower(FOLLOWER_MOTOR_ID, MotorAlignmentValue.Opposed));
   }
 

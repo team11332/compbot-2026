@@ -37,14 +37,14 @@ public class CANFuelSubsystem extends SubsystemBase {
   public CANFuelSubsystem() {
     // create brushed motors for each of the motors on the launcher mechanism
     intakeLauncherLeader = new TalonFX(INTAKE_LAUNCHER_MOTOR_ID);
-    intakeLauncherFollower = new TalonFX(FEEDER_MOTOR_ID);
-    feeder = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushless);
+    intakeLauncherFollower = new TalonFX(FOLLOWER_MOTOR_ID);
+    feeder = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushless);
     feederController = feeder.getClosedLoopController();
 
     // create the configuration for the feeder roller, set a current limit and apply
     // the config to the controller
     SparkMaxConfig feederConfig = new SparkMaxConfig();
-    feederConfig.smartCurrentLimit(INDEXER_MOTOR_CURRENT_LIMIT);
+    feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
     feederConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .p(0.1)
@@ -72,7 +72,7 @@ public class CANFuelSubsystem extends SubsystemBase {
     launcherConfig.CurrentLimits.SupplyCurrentLimit = LAUNCHER_MOTOR_CURRENT_LIMIT;
     intakeLauncherLeader.getConfigurator().apply(launcherConfig);
     intakeLauncherFollower.getConfigurator().apply(launcherConfig);
-    intakeLauncherFollower.setControl(new Follower(FEEDER_MOTOR_ID, MotorAlignmentValue.Opposed));
+    intakeLauncherFollower.setControl(new Follower(FOLLOWER_MOTOR_ID, MotorAlignmentValue.Opposed));
   }
 
    

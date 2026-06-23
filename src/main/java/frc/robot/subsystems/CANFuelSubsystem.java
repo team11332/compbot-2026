@@ -22,7 +22,7 @@ import static frc.robot.Constants.FuelConstants.*;
 import java.security.Policy;
 
 public class CANFuelSubsystem extends SubsystemBase {
-  private final SparkMax feederRoller;
+  private final TalonFX feederRoller;
   private final TalonFX intakeLauncherRoller;
   private final SparkMax Indexer;
 
@@ -30,8 +30,8 @@ public class CANFuelSubsystem extends SubsystemBase {
   public CANFuelSubsystem() {
     // create brushed motors for each of the motors on the launcher mechanism
     intakeLauncherRoller = new TalonFX(INTAKE_LAUNCHER_MOTOR_ID);
-    feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushed);
-    Indexer = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushed);
+    feederRoller = new TalonFX(FEEDER_MOTOR_ID);
+    Indexer = new SparkMax(INDEXER_MOTOR_ID, MotorType.kBrushless);
 
     // create the configuration for the feeder roller, set a current limit and apply
     // the config to the controller
@@ -66,8 +66,8 @@ public class CANFuelSubsystem extends SubsystemBase {
   // A method to set the rollers to values for ejecting fuel out the intake. Uses
   // the same values as intaking, but in the opposite direction.
   public void eject() {
-    feederRoller.setFeederRoller
-        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)).withSlot(0))
+    feederRoller.setFeederRoller( (-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)));
+    intakeLauncherRoller.setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
 ;
     intakeLauncherRoller
         .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));

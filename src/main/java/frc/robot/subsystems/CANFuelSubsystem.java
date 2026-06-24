@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -12,6 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -33,12 +35,13 @@ public class CANFuelSubsystem extends SubsystemBase {
   private final TalonFX intakeLauncherLeader;
   private final SparkMax feeder;
   private final SparkClosedLoopController feederController;
+ 
 
   /** Creates a new CANBallSubsystem. */
   public CANFuelSubsystem() {
     // create brushed motors for each of the motors on the launcher mechanism
-    intakeLauncherLeader = new TalonFX(INTAKE_LAUNCHER_MOTOR_ID);
-    intakeLauncherFollower = new TalonFX(FOLLOWER_MOTOR_ID);
+    intakeLauncherLeader = new TalonFX(FOLLOWER_MOTOR_ID);
+    intakeLauncherFollower = new TalonFX(INTAKE_LAUNCHER_MOTOR_ID);
     feeder = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushless);
     feederController = feeder.getClosedLoopController();
 
@@ -48,9 +51,10 @@ public class CANFuelSubsystem extends SubsystemBase {
     feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
     feederConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(0.1)
+        .p(0.3)
         .i(0.0)
-        .d(0.0);
+        .d(0.0).feedForward.kV(1.2);
+        
     feeder.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
@@ -72,9 +76,10 @@ public class CANFuelSubsystem extends SubsystemBase {
     launcherConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     launcherConfig.CurrentLimits.SupplyCurrentLimit = LAUNCHER_MOTOR_CURRENT_LIMIT;
     Slot0Configs slot0Configs = new Slot0Configs();
-    slot0Configs.kP = 0.1;
+    slot0Configs.kP = 0;
     slot0Configs.kI = 0.0;
     slot0Configs.kD = 0.0;
+    slot0Configs.kV = 0.052;
     intakeLauncherLeader.getConfigurator().apply(launcherConfig);
     intakeLauncherFollower.getConfigurator().apply(launcherConfig);
     intakeLauncherLeader.getConfigurator().apply(slot0Configs);
@@ -84,41 +89,47 @@ public class CANFuelSubsystem extends SubsystemBase {
 
    
   public void intake() {
-    feederController.setSetpoint(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY), ControlType.kVelocity);
+    feeder.setVoltage (8 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY));
     intakeLauncherLeader
         .setControl(new VelocityVoltage(SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
   }
   // A method to set the rollers to values for ejecting fuel out the intake. Uses
   // the same values as intaking, but in the opposite direction.
   public void eject() {
-    feeder.set( (-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VELOCITY)));
-    intakeLauncherLeader.setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
-;
-    intakeLauncherLeader
-        .setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
+    feeder.setVoltage(-6);
+    intakeLauncherLeader.setControl(new VelocityVoltage( -SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
+    intakeLauncherFollower.setControl(new StrictFollower(FOLLOWER_MOTOR_ID));
+    //intakeLauncherLeader.setControl(new VelocityVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VELOCITY)).withSlot(0));
   }
 
   // A method to set the rollers to values for launching.
   public void launch() {
-    feederController
-        .setSetpoint(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY),ControlType.kVelocity);
+    feeder.setVoltage(-6.0 * SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VELOCITY));
     intakeLauncherLeader
-        .setControl(new VelocityVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)).withSlot(0));
+        .setControl(new VelocityVoltage(-SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)).withSlot(0));
+    intakeLauncherFollower.setControl(new StrictFollower(FOLLOWER_MOTOR_ID));
+
   }
 
   // A method to stop the rollers
   public void stop() {
-    feeder.set(0);
+    feeder.setVoltage(0);
     intakeLauncherLeader.set(0);
+    intakeLauncherFollower.setControl(new StrictFollower(FOLLOWER_MOTOR_ID));
+
   }
 
   // A method to spin up the launcher roller while spinning the feeder roller to
   // push Fuel away from the launcher
   public void spinUp() {
-    feederController
-        .setSetpoint(SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VELOCITY),ControlType.kVelocity);
+    //setPoint = SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VELOCITY);
+    // feederController
+    //    .setSetpoint(, ),ControlType.kVelocity);
+    feeder.setVoltage(-6 * SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VELOCITY));
     intakeLauncherLeader
         .setControl(new VelocityVoltage(SmartDashboard.getNumber("Spin-up launcher roller value", LAUNCHING_LAUNCHER_VELOCITY)).withSlot(0));
+    intakeLauncherFollower.setControl(new StrictFollower(FOLLOWER_MOTOR_ID));
+    
   }
 
   // A command factory to turn the spinUp method into a command that requires this
@@ -135,6 +146,8 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //feederController.setSetpoint(setPoint, ControlType.kVelocity);
+
     // This method will be called once per scheduler run
   }
 }

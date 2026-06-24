@@ -44,11 +44,11 @@ public final class Constants {
     // Voltage values for various fuel operations. These values may need to be tuned
     // based on exact robot construction.
     // See the Software Guide for tuning information
-    public static final double INTAKING_FEEDER_VELOCITY = -50;
-    public static final double INTAKING_INTAKE_VELOCITY = 50;
-    public static final double LAUNCHING_FEEDER_VELOCITY = 38;
-    public static final double LAUNCHING_LAUNCHER_VELOCITY = 35;
-    public static final double SPIN_UP_FEEDER_VELOCITY = -25;
+    public static final double INTAKING_FEEDER_VELOCITY = 1;
+    public static final double INTAKING_INTAKE_VELOCITY = 80;
+    public static final double LAUNCHING_FEEDER_VELOCITY = 1;
+    public static final double LAUNCHING_LAUNCHER_VELOCITY = 1;
+    public static final double SPIN_UP_FEEDER_VELOCITY = 1;
     public static final double SPIN_UP_SECONDS = 1;
   }
 

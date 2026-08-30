@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import static frc.robot.Constants.OperatorConstants.*;
+import static frc.robot.Constants.Noya.*;
 import static frc.robot.Constants.FuelConstants.*;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -88,6 +88,12 @@ public class RobotContainer {
         driveSubsystem.driveArcade(
             () -> driverController.getLeftY() * DRIVE_SCALING,
             () -> driverController.getRightX() * ROTATION_SCALING));
+  }
+
+  public void hadar() {
+    for (int i = 0; i < 10; i++) {
+      System.out.println("Hadar is the best");
+    }
   }
 
   /**

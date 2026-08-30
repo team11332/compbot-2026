@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import static frc.robot.Constants.OperatorConstants.*;
+import static frc.robot.Constants.Noya.*;
 import static frc.robot.Constants.FuelConstants.*;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -90,11 +90,12 @@ public class RobotContainer {
             () -> driverController.getRightX() * ROTATION_SCALING));
   }
 
-  public void hadar(){
-    for (int i = 0; i < 13; i++){
-      System.out.println("Hello, Hadar! This is message number " + (i + 1));
+  public void hadar() {
+    for (int i = 0; i < 10; i++) {
+      System.out.println("Hadar is the best");
     }
   }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

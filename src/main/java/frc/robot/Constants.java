@@ -52,7 +52,7 @@ public final class Constants {
     public static final double SPIN_UP_SECONDS = 1;
   }
 
-  public static final class OperatorConstants {
+  public static final class Noya {
     // Port constants for driver and operator controllers. These should match the
     // values in the Joystick tab of the Driver Station software
     public static final int DRIVER_CONTROLLER_PORT = 0;

@@ -42,7 +42,7 @@ public class CANDriveSubsystem extends SubsystemBase {
     // battery). The current limit helps prevent tripping
     // breakers.
     SparkMaxConfig config = new SparkMaxConfig();
-    config.voltageCompensation(12);
+    config.voltageCompensation(6);
     config.smartCurrentLimit(DRIVE_MOTOR_CURRENT_LIMIT);
 
     // Set configuration to follow each leader and then apply it to corresponding

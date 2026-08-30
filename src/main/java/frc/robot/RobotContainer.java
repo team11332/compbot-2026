@@ -90,6 +90,11 @@ public class RobotContainer {
             () -> driverController.getRightX() * ROTATION_SCALING));
   }
 
+  public void hadar(){
+    for (int i = 0; i < 13; i++){
+      System.out.println("Hello, Hadar! This is message number " + (i + 1));
+    }
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
